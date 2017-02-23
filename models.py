@@ -11,7 +11,7 @@ def db_connect():
 
 
 def create_db_session(engine):
-    Session = sessionmaker(bind=engine)
+    Session = sessionmaker(bind=engine, autoflush=False)
     session = Session()
     return session
 
