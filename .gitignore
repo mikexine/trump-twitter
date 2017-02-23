@@ -8,3 +8,4 @@ env/
 smartconvert.py
 tweet_utils.py
 ext.txt
+*.log

@@ -8,7 +8,7 @@ import config
 import zipfile
 from threading import Thread
 from urllib.request import urlopen
-
+import logging
 try:
     from StringIO import StringIO
 except ImportError:
@@ -17,14 +17,30 @@ except ImportError:
 import ssl
 import os
 
+
+logger = logging.getLogger('load_archive')
+
+file_log_handler = logging.FileHandler('logfile.log')
+logger.addHandler(file_log_handler)
+
+stderr_log_handler = logging.StreamHandler()
+logger.addHandler(stderr_log_handler)
+
+# nice output format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_log_handler.setFormatter(formatter)
+stderr_log_handler.setFormatter(formatter)
+logger.setLevel(logging.DEBUG)
+
 db_eng = db_connect()
 create_tables(db_eng)
+
 
 def download(account):
     # with zipfile.ZipFile(account + ".zip", "r") as zip_ref:
     #     zip_ref.extractall(".")
     url = config.giturl.replace("NAME", account)
-    print(url)
+    logger.info(url)
 
     # download file
     context = ssl._create_unverified_context()
@@ -45,7 +61,7 @@ def parse(account):
     db_session = create_db_session(db_engine)
     with open(account + '_long.json', 'r') as content_file:
         content = json.loads(content_file.read())
-        print("%s has %s tweets" % (account, len(content)))
+        logger.info("%s has %s tweets" % (account, len(content)))
         cnt = 0
         for doc in content:
 
@@ -139,7 +155,7 @@ def parse(account):
 
             if not cnt % config.commitnumber:
                 db_session.commit()
-                print("Committed %s rows from account %s" % (cnt, account))
+                logger.info("Committed %s rows from account %s" % (cnt, account))
                 if config.isDev:
                     break
         db_session.commit()
