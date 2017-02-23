@@ -6,7 +6,7 @@ import arrow
 from models import Tweet, db_connect, create_db_session, create_tables
 import config
 import zipfile
-import threading
+from threading import Thread
 from urllib.request import urlopen
 
 try:
@@ -150,26 +150,29 @@ def main():
     downloads = []
     parsers = []
 
-    for account in accounts:
-        td = threading.Thread(target=download, args=(account,), kwargs={})
-        downloads.append(td)
-        tp = threading.Thread(target=parse, args=(account,), kwargs={})
-        downloads.append(tp)
+    # for account in accounts:
+    #     td = threading.Thread(target=download, args=(account,), kwargs={})
+    #     downloads.append(td)
+    #     tp = threading.Thread(target=parse, args=(account,), kwargs={})
+    #     downloads.append(tp)
 
-    for d in downloads:
-        d.start()
+    downloads = [Thread(target=download, args=(account,)) for account in accounts]
+    [d.start() for d in downloads]
+    [d.join() for d in downloads]
 
-    for d in downloads:
-        d.join()
+
+    parsers = [Thread(target=parse, args=(account,)) for account in accounts]
+    [p.start() for p in parsers]
+    [p.join() for p in parsers]
 
     # for account in accounts:
     #     parse(account)
 
-    for p in parsers:
-        p.start()
+    # for p in parsers:
+    #     p.start()
 
-    for p in parsers:
-        p.join()
+    # for p in parsers:
+    #     p.join()
 
 
 if __name__ == '__main__':
