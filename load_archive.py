@@ -95,7 +95,7 @@ def main():
                           UserFavoritesCount=UserFavoritesCount,
                           UserStatusesCount=UserStatusesCount)
 
-            db_session.add(tweet)
+            db_session.merge(tweet)
             cnt += 1
 
             if not cnt % 100:
@@ -103,5 +103,5 @@ def main():
                 print("Committed 100 rows")
 
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
