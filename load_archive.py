@@ -125,7 +125,8 @@ def parse(account):
             if not cnt % 100:
                 db_session.commit()
                 print("Committed 100 rows")
-                break
+                if config.isDev:
+                    break
         db_session.commit()
 
 
