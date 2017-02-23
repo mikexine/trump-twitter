@@ -6,18 +6,42 @@ import arrow
 from models import Tweet, db_connect, create_db_session, create_tables
 import config
 import zipfile
+import threading
+from urllib.request import urlopen
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
+import ssl
+import os
 
 
-with zipfile.ZipFile("realdonaldtrump.zip", "r") as zip_ref:
-    zip_ref.extractall(".")
+def download(account):
+    # with zipfile.ZipFile(account + ".zip", "r") as zip_ref:
+    #     zip_ref.extractall(".")
+    url = config.giturl.replace("NAME", account)
+    print(url)
 
-db_engine = db_connect()
-create_tables(db_engine)
-db_session = create_db_session(db_engine)
+    # download file
+    context = ssl._create_unverified_context()
+    request = urlopen(url, context=context)
+
+    # save
+    output = open(account + ".zip", 'wb')
+    output.write(request.read())
+    output.close()
+
+    filename = "%s/%s.zip" % (os.getcwd(), account)
+    with zipfile.ZipFile(filename) as z:
+        z.extractall(".")
 
 
-def main():
-    with open('realdonaldtrump_long.json', 'r') as content_file:
+def parse(account):
+    db_engine = db_connect()
+    db_session = create_db_session(db_engine)
+    with open(account + '_long.json', 'r') as content_file:
         content = json.loads(content_file.read())
         print(len(content))
         cnt = 0
@@ -98,10 +122,30 @@ def main():
             db_session.merge(tweet)
             cnt += 1
 
-            if not cnt % 5000:
+            if not cnt % 100:
                 db_session.commit()
                 print("Committed 100 rows")
+                break
         db_session.commit()
+
+
+def main():
+    accounts = config.accounts
+    downloads = []
+
+    for account in accounts:
+        td = threading.Thread(target=download, args=(account,), kwargs={})
+        downloads.append(td)
+
+    for d in downloads:
+        d.start()
+
+    for d in downloads:
+        d.join()
+
+    for account in accounts:
+        parse(account)
+
 
 if __name__ == '__main__':
     main()
