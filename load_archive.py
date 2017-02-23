@@ -43,7 +43,7 @@ def parse(account):
     db_session = create_db_session(db_engine)
     with open(account + '_long.json', 'r') as content_file:
         content = json.loads(content_file.read())
-        print(len(content))
+        print("%s has %s tweets" % (account, len(content)))
         cnt = 0
         for doc in content:
             TweetId = doc.get('id')
