@@ -134,7 +134,7 @@ def parse(account):
                           UserFavoritesCount=UserFavoritesCount,
                           UserStatusesCount=UserStatusesCount)
 
-            db_session.add(tweet)
+            db_session.merge(tweet)
             cnt += 1
 
             if not cnt % config.commitnumber:
