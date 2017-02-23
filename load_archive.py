@@ -46,7 +46,6 @@ def parse(account):
         print(len(content))
         cnt = 0
         for doc in content:
-            print("Tweet number: %s " % cnt)
             TweetId = doc.get('id')
             TweetDate = arrow.get(doc.get('created_at'), "ddd MMM DD HH:mm:ss Z YYYY").format('YYYY-MM-DD HH:mm:ss ZZ')
             Text = doc.get("text")
@@ -122,9 +121,9 @@ def parse(account):
             db_session.merge(tweet)
             cnt += 1
 
-            if not cnt % 100:
+            if not cnt % config.commitnumber:
                 db_session.commit()
-                print("Committed 100 rows")
+                print("Committed %s rows" % cnt)
                 if config.isDev:
                     break
         db_session.commit()
