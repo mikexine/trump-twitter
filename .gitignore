@@ -7,3 +7,4 @@ env/
 *.json
 smartconvert.py
 tweet_utils.py
+ext.txt
