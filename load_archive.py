@@ -17,6 +17,9 @@ except ImportError:
 import ssl
 import os
 
+db_eng = db_connect()
+create_tables(db_eng)
+
 
 def download(account):
     # with zipfile.ZipFile(account + ".zip", "r") as zip_ref:
@@ -118,7 +121,7 @@ def parse(account):
                           UserFavoritesCount=UserFavoritesCount,
                           UserStatusesCount=UserStatusesCount)
 
-            db_session.merge(tweet)
+            db_session.add(tweet)
             cnt += 1
 
             if not cnt % config.commitnumber:

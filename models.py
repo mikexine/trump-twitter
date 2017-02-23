@@ -3,6 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import config
 
+DeclarativeBase = declarative_base()
+
 
 def db_connect():
     return create_engine(config.DB_URL)
@@ -15,12 +17,11 @@ def create_db_session(engine):
 
 
 def create_tables(engine):
-    DeclarativeBase = declarative_base()
     DeclarativeBase.metadata.create_all(engine)
 
 
-class Tweet(declarative_base()):
-    __tablename__ = "realdonaldtrump"
+class Tweet(DeclarativeBase):
+    __tablename__ = "tweets"
 
     TweetId = Column(BigInteger, primary_key=True)
     TweetDate = Column('tweetDate', DateTime, nullable=True)
