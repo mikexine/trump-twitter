@@ -55,6 +55,11 @@ def parse(account):
             RetweetCount = doc.get("retweet_count")
             FavoriteCount = doc.get("favorite_count")
 
+            Retweeted = None
+            OriginalTweetId = None
+            OriginalTweetUserId = None
+            OriginalTweetDate = None
+
             if doc.get("retweeted_status") is not None:
                 Retweeted = True
                 OriginalTweetId = doc.get("retweeted_status").get('id')
