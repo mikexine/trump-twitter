@@ -125,7 +125,7 @@ def parse(account):
 
             if not cnt % config.commitnumber:
                 db_session.commit()
-                print("Committed %s rows" % cnt)
+                print("Committed %s rows from account %s" % (cnt, account))
                 if config.isDev:
                     break
         db_session.commit()
@@ -134,10 +134,13 @@ def parse(account):
 def main():
     accounts = config.accounts
     downloads = []
+    parsers = []
 
     for account in accounts:
         td = threading.Thread(target=download, args=(account,), kwargs={})
         downloads.append(td)
+        tp = threading.Thread(target=parse, args=(account,), kwargs={})
+        downloads.append(tp)
 
     for d in downloads:
         d.start()
@@ -145,8 +148,14 @@ def main():
     for d in downloads:
         d.join()
 
-    for account in accounts:
-        parse(account)
+    # for account in accounts:
+    #     parse(account)
+
+    for p in parsers:
+        p.start()
+
+    for p in parsers:
+        p.join()
 
 
 if __name__ == '__main__':
