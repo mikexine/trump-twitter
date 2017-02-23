@@ -158,6 +158,7 @@ def parse(account):
                 logger.info("Committed %s rows from account %s" % (cnt, account))
                 if config.isDev:
                     break
+        logger.info("Committed %s rows from account %s" % (cnt, account))
         db_session.commit()
 
 
