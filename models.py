@@ -38,6 +38,8 @@ class Tweet(DeclarativeBase):
 
     OriginalTweetId = Column('originalTweetId', BigInteger, nullable=True)
     OriginalTweetUserId = Column('originalTweetUserId', BigInteger, nullable=True)
+    OriginalTweetUserName = Column('originalTweetUserName', String, nullable=True)
+    OriginalTweetUserScreenName = Column('originalTweetUserScreenName', String, nullable=True)
     OriginalTweetDate = Column('originalTweetDate', DateTime, nullable=True)
 
     UserId = Column('userId', BigInteger, nullable=True)

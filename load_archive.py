@@ -18,7 +18,7 @@ import ssl
 import os
 
 db_eng = db_connect()
-
+create_tables(db_eng)
 
 def download(account):
     # with zipfile.ZipFile(account + ".zip", "r") as zip_ref:
@@ -58,12 +58,16 @@ def parse(account):
             Retweeted = None
             OriginalTweetId = None
             OriginalTweetUserId = None
+            OriginalTweetUserName = None
+            OriginalTweetUserScreenName = None
             OriginalTweetDate = None
 
             if doc.get("retweeted_status") is not None:
                 Retweeted = True
                 OriginalTweetId = doc.get("retweeted_status").get('id')
                 OriginalTweetUserId = doc.get("retweeted_status").get('user').get('id')
+                OriginalTweetUserName = doc.get("retweeted_status").get('user').get('name')
+                OriginalTweetUserScreenName = doc.get("retweeted_status").get('user').get('screen_name')
                 OriginalTweetDate = arrow.get(doc.get("retweeted_status").get('created_at'), "ddd MMM DD HH:mm:ss Z YYYY").format('YYYY-MM-DD HH:mm:ss ZZ')
 
             Favorited = doc.get("favorited")
@@ -114,6 +118,8 @@ def parse(account):
                           Urls=Urls,
                           OriginalTweetId=OriginalTweetId,
                           OriginalTweetUserId=OriginalTweetUserId,
+                          OriginalTweetUserName=OriginalTweetUserName,
+                          OriginalTweetUserScreenName=OriginalTweetUserScreenName,
                           OriginalTweetDate=OriginalTweetDate,
                           UserId=UserId,
                           UserName=UserName,
