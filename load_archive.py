@@ -18,7 +18,6 @@ import ssl
 import os
 
 db_eng = db_connect()
-create_tables(db_eng)
 
 
 def download(account):
@@ -121,7 +120,7 @@ def parse(account):
                           UserFavoritesCount=UserFavoritesCount,
                           UserStatusesCount=UserStatusesCount)
 
-            db_session.add(tweet)
+            db_session.merge(tweet)
             cnt += 1
 
             if not cnt % config.commitnumber:
