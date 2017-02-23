@@ -98,10 +98,10 @@ def main():
             db_session.merge(tweet)
             cnt += 1
 
-            if not cnt % 100:
+            if not cnt % 5000:
                 db_session.commit()
                 print("Committed 100 rows")
-
+        db_session.commit()
 
 if __name__ == '__main__':
     main()
