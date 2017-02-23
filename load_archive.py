@@ -48,12 +48,19 @@ def parse(account):
         print("%s has %s tweets" % (account, len(content)))
         cnt = 0
         for doc in content:
+
             TweetId = doc.get('id')
             TweetDate = arrow.get(doc.get('created_at'), "ddd MMM DD HH:mm:ss Z YYYY").format('YYYY-MM-DD HH:mm:ss ZZ')
             Text = doc.get("text")
             RetweetCount = doc.get("retweet_count")
             FavoriteCount = doc.get("favorite_count")
-            Retweeted = doc.get("retweeted")
+
+            if doc.get("retweeted_status") is not None:
+                Retweeted = True
+                OriginalTweetId = doc.get("retweeted_status").get('id')
+                OriginalTweetUserId = doc.get("retweeted_status").get('user').get('id')
+                OriginalTweetDate = arrow.get(doc.get("retweeted_status").get('created_at'), "ddd MMM DD HH:mm:ss Z YYYY").format('YYYY-MM-DD HH:mm:ss ZZ')
+
             Favorited = doc.get("favorited")
             TweetLang = doc.get('lang')
             Source = doc.get('source', "").partition('>')[-1].rpartition('<')[0]
@@ -72,10 +79,6 @@ def parse(account):
             if doc.get('entities').get('urls'):
                 for m in doc.get('entities').get('urls'):
                     Urls.append(m.get('expanded_url'))
-
-            OriginalTweetId = None
-            OriginalTweetUserId = None
-            OriginalTweetDate = None
 
             UserId = doc.get('user').get('id')
             UserName = doc.get('user').get('name')
@@ -120,7 +123,7 @@ def parse(account):
                           UserFavoritesCount=UserFavoritesCount,
                           UserStatusesCount=UserStatusesCount)
 
-            db_session.merge(tweet)
+            db_session.add(tweet)
             cnt += 1
 
             if not cnt % config.commitnumber:
