@@ -21,7 +21,7 @@ def create_tables(engine):
 
 
 class Tweet(DeclarativeBase):
-    __tablename__ = "tweetsurls"
+    __tablename__ = "three"
 
     TweetId = Column(BigInteger, primary_key=True)
     TweetDate = Column('tweetDate', DateTime, nullable=True)

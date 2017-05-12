@@ -21,7 +21,7 @@ def create_tables(engine):
 
 
 class Tweet(DeclarativeBase):
-    __tablename__ = "tweetsurls"
+    __tablename__ = "tweets"
 
     TweetId = Column(BigInteger, primary_key=True)
     TweetDate = Column('tweetDate', DateTime, nullable=True)
@@ -54,13 +54,3 @@ class Tweet(DeclarativeBase):
     UserFriendsCount = Column('userFriendsCount', BigInteger, nullable=True)
     UserFavoritesCount = Column('userFavoritesCount', BigInteger, nullable=True)
     UserStatusesCount = Column('userStatusesCount', BigInteger, nullable=True)
-
-
-class FakeNews(DeclarativeBase):
-    __tablename__ = "fakenews"
-
-    Id = Column("id", BigInteger, primary_key=True)
-    tweetid = Column(BigInteger, nullable=True)
-    fullurl = Column(String, nullable=True)
-    website = Column(String, nullable=True)
-    rawurl = Column(String, nullable=True)
